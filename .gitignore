@@ -1,0 +1,4 @@
+*.sln
+*Biblioteket.*
+project.*
+.NETCoreApp,Version=v8.*
