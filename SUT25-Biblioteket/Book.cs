@@ -3,21 +3,21 @@ namespace LibrarySystem
     public class Book
     {
         // Global properties that will be needed 
-        public int Id;
-           public string Title ="";
-          public  int TotalCopies;
-           public int BorrowedCopies;
+        public int id;
+           public string title ="";
+          public  int totalCopies;
+           public int borrowedCopies;
             
             // Calculation of the number of available copies
             public int GetAvailableCopies()  
             {
-                return TotalCopies - BorrowedCopies;
+                return totalCopies - borrowedCopies;
                 }
 
             // Display book info
             public void DisplayBook() 
             {
-                System.Console.WriteLine($"[{Id}] {Title} - Tillgängliga: {GetAvailableCopies()}/{TotalCopies} - Utlånade: {BorrowedCopies}");
+                System.Console.WriteLine($"[{id}] {title} - Tillgängliga: {GetAvailableCopies()}/{totalCopies} - Utlånade: {borrowedCopies}");
             }          
     }
 }
