@@ -66,7 +66,7 @@ namespace LibrarySystem
             user4.pin = "4444";
             user4.InitialiseBorrowedBooks();
 
-             // Creating fifth user
+            // Creating fifth user
             User user5 = new User();
             user5.username = "Antonio";
             user5.pin = "5555";
@@ -95,7 +95,7 @@ namespace LibrarySystem
 
                 // Ask username            
                 Console.WriteLine("Ange användarnamn: ");
-                 string inputUsername = Console.ReadLine();
+                string inputUsername = Console.ReadLine();
                 
                 // Ask the pin
                 Console.WriteLine("Ange PIN-kod: ");
@@ -105,7 +105,7 @@ namespace LibrarySystem
                 for (int i = 0; i < users.Length; i++)
                 // Check if the inputUsername and inputPin match any user
                 {
-                     // If match found: 1. set currentUser to the user
+                    // If match found: 1. set currentUser to the user
                 // 2. Set loggeIn to true & 3. Break out of the loop
                     if(users[i].username == inputUsername && users[i].pin == inputPin){
                         currentUser = users[i];
@@ -133,6 +133,54 @@ namespace LibrarySystem
 
             // Welcome message after login success
             Console.WriteLine($"\nVälkommen, {currentUser.username}!");
+            bool userLoggedIn = true;
+
+            // Building the Main menu
+            while(userLoggedIn)
+            {
+                Console.WriteLine("\n=== Huvudmeny ===");
+                Console.WriteLine("1. Visa böcker");
+                Console.WriteLine("2. Låna bok");
+                Console.WriteLine("3. Lämna tillbaka bok");
+                Console.WriteLine("4. Mina lån");
+                Console.WriteLine("5. Logga ut");
+                Console.Write("\nVälj ett alternativ (1-5): ");
+
+                string choice = Console.ReadLine();
+
+                switch (choice)
+                {
+                    case "1":
+                    // Todo: call method to show books
+                    break;
+                    case "2":
+                    // Todo: call method to borrow a book
+                    break;
+                    case "3":
+                    // Todo: call method to retun a book
+                    break;
+                    case "4":
+                    // Todo: call method to show user's borrowed books
+                    break;
+                    case "5":
+                    // Todo: call method to show books
+                    break;
+                    default:
+                    Console.WriteLine("Ogiltigt val. Välj 1-5.");
+                    break;
+                }
+
+                // Wait for Enter before showing menu again
+                if(userLoggedIn)
+                {
+                    Console.WriteLine("\nTryck Enter for att återgå till huvudmenyn...");
+                    Console.ReadLine();
+                }
+            }
+
+            // Thank the user for using the system
+            Console.WriteLine("Tack för besöket! Hej då!");
         }
     }    
 }
+
