@@ -72,8 +72,67 @@ namespace LibrarySystem
             user5.pin = "5555";
             user5.InitialiseBorrowedBooks();
 
-            // Welcome message
-            System.Console.WriteLine("Välkommen till bibliotekets lånesystem!");
+            // Save the users into an array, simple database
+            User[] users = new User[5];
+            users[0] = user1;
+            users[1] = user2;
+            users[2] = user3;
+            users[3] = user4;
+            users[4] = user5;
+            
+            // Login system requires variables to make it work
+            int loginAttempts = 0;
+            bool loggedIn = false;
+            User currentUser = user1; // Need this to store the logged-in user after success
+
+            // Welcome message before login
+            Console.WriteLine("Välkommen till bibliotekets lånesystem!\n");
+
+
+            // Login loop with assigned attempts
+            while (!loggedIn && loginAttempts < 3)
+            {
+
+                // Ask username            
+                Console.WriteLine("Ange användarnamn: ");
+                 string inputUsername = Console.ReadLine();
+                
+                // Ask the pin
+                Console.WriteLine("Ange PIN-kod: ");
+                string inputPin = Console.ReadLine();
+
+                // Here the loop to go through all users
+                for (int i = 0; i < users.Length; i++)
+                // Check if the inputUsername and inputPin match any user
+                {
+                     // If match found: 1. set currentUser to the user
+                // 2. Set loggeIn to true & 3. Break out of the loop
+                    if(users[i].username == inputUsername && users[i].pin == inputPin){
+                        currentUser = users[i];
+                        loggedIn = true;
+                        break;
+                    }
+                }
+
+                if (!loggedIn) 
+                {
+                    // If no match found after checking all users, do this:
+                    loginAttempts++;
+                    if (loginAttempts < 3) 
+                    {
+                        Console.WriteLine("Fel användarnamn eller PIN. Försök igen.");
+                    }
+                }
+            }
+            // After a while... xD , checked if logged in
+                if(!loggedIn)
+                {
+                    Console.WriteLine("För många misslyckade försök. Hej då!");
+                    return;
+                }
+
+            // Welcome message after login success
+            Console.WriteLine($"\nVälkommen, {currentUser.username}!");
         }
     }    
 }
