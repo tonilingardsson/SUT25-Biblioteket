@@ -170,8 +170,9 @@ namespace LibrarySystem
                     case "3":
                     ReturnBook(books, currentUser);
                     break;
+                    // Display all the borrowed books, method is done
                     case "4":
-                    // Todo: call method to show user's borrowed books
+                    currentUser.DisplayBorrowedBooks();
                     break;
                     case "5":
                     // Todo: call method to show books
