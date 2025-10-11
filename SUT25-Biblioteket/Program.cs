@@ -174,8 +174,10 @@ namespace LibrarySystem
                     case "4":
                     currentUser.DisplayBorrowedBooks();
                     break;
+                    // Log out, and communicate to the user
                     case "5":
-                    // Todo: call method to show books
+                    Console.WriteLine("Tack för att du läser! Loggar ut...");
+                    userLoggedIn = false;
                     break;
                     default:
                     Console.WriteLine("Ogiltigt val. Välj 1-5.");
