@@ -79,6 +79,14 @@ namespace LibrarySystem
             users[2] = user3;
             users[3] = user4;
             users[4] = user5;
+
+            // Save the books into an array, simple database
+            Book[] books = new Book[5];
+            books[0] = book1;
+            books[1] = book2;
+            books[2] = book3;
+            books[3] = book4;
+            books[4] = book5;
             
             // Login system requires variables to make it work
             int loginAttempts = 0;
@@ -151,7 +159,7 @@ namespace LibrarySystem
                 switch (choice)
                 {
                     case "1":
-                    // Todo: call method to show books
+                    ShowBooks(books);
                     break;
                     case "2":
                     // Todo: call method to borrow a book
@@ -180,6 +188,18 @@ namespace LibrarySystem
 
             // Thank the user for using the system
             Console.WriteLine("Tack för besöket! Hej då!");
+        }
+        static void ShowBooks(Book[] books)
+        {
+            // Display a menu "header"
+            System.Console.WriteLine("\n=== Tillgängliga böcker ===");
+
+            // Loop though all the books saved above
+            foreach (var book in books)
+            {
+                // Using the method created in Book.cs -> applying SOC
+                book.DisplayBook();
+            }
         }
     }    
 }
