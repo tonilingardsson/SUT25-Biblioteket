@@ -158,14 +158,16 @@ namespace LibrarySystem
 
                 switch (choice)
                 {
+                    // Display the books available in the library. Start with 5, add later
                     case "1":
                     ShowBooks(books);
                     break;
+                    // Let the user borrow a book
                     case "2":
-                    // Todo: call method to borrow a book
+                    BorrowBook(books, currentUser);
                     break;
                     case "3":
-                    // Todo: call method to retun a book
+                    // Todo: call method to return a book
                     break;
                     case "4":
                     // Todo: call method to show user's borrowed books
@@ -189,10 +191,11 @@ namespace LibrarySystem
             // Thank the user for using the system
             Console.WriteLine("Tack för besöket! Hej då!");
         }
+        // This method will display the books when user chooses 1 on the menu
         static void ShowBooks(Book[] books)
         {
             // Display a menu "header"
-            System.Console.WriteLine("\n=== Tillgängliga böcker ===");
+            Console.WriteLine("\n=== Tillgängliga böcker ===");
 
             // Loop though all the books saved above
             foreach (var book in books)
@@ -200,6 +203,55 @@ namespace LibrarySystem
                 // Using the method created in Book.cs -> applying SOC
                 book.DisplayBook();
             }
+        }
+        // This method will display the available books when user chooses 2 on the menu
+        static void BorrowBook(Book[] books, User currentUser)
+        {
+            ShowBooks(books);
+
+            // Asking the user to know which book wants to borrow. Saving a string!
+            Console.WriteLine("\nAnge bok-ID för att låna: ");
+            string bookIdToBorrow = Console.ReadLine();
+            
+            // Error handling in case the user enters a wrong book-id. Checking if it's an integer
+            if(!int.TryParse(bookIdToBorrow, out int bookId))
+            {
+                Console.WriteLine("Ogilitgt bok-ID.");
+                return;
+            }
+
+            // ID is int, then we search the bok-ID through the array
+            for (int i = 0; i < books.Length; i++)
+            {
+                if (books[i].id == bookId) 
+                {
+                    // Check if the user can still borrow mroe books
+
+                    if (!currentUser.CanBorrowMore())
+                    {
+                        Console.WriteLine("Du har redan lånat max antal böcker (3).");
+                        return;
+                    }
+                    
+                    // Check if there are available copies of the chosen book    
+                    if(books[i].GetAvailableCopies() == 0)
+                    {
+                        Console.WriteLine("Boken är inte tillgänglig just nu.");
+                        return;
+                    }
+
+                    // When user can borrow & there are available copies do this:
+                        // Add book to the user & display how many available copies are left
+                        currentUser.borrowedBooks[currentUser.borrowedCount] = books[i].id;
+                        currentUser.borrowedCount++;
+                        books[i].borrowedCopies++;
+                        Console.WriteLine($"Du har lånat {books[i].title}. Välkommen åter!");
+                        return; // exit!
+                    
+                }
+            }
+            // In case the user enters an integer but it does not match any book-id on the array.
+            Console.WriteLine("Bok-ID hittades inte.");
         }
     }    
 }
