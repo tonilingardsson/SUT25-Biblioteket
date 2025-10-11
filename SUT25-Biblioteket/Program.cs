@@ -166,8 +166,9 @@ namespace LibrarySystem
                     case "2":
                     BorrowBook(books, currentUser);
                     break;
+                    // Let the user return a book
                     case "3":
-                    // Todo: call method to return a book
+                    ReturnBook(books, currentUser);
                     break;
                     case "4":
                     // Todo: call method to show user's borrowed books
@@ -241,17 +242,75 @@ namespace LibrarySystem
                     }
 
                     // When user can borrow & there are available copies do this:
-                        // Add book to the user & display how many available copies are left
-                        currentUser.borrowedBooks[currentUser.borrowedCount] = books[i].id;
-                        currentUser.borrowedCount++;
-                        books[i].borrowedCopies++;
-                        Console.WriteLine($"Du har lånat {books[i].title}. Välkommen åter!");
-                        return; // exit!
-                    
+                    // Add book to the user & display how many available copies are left
+                    currentUser.borrowedBooks[currentUser.borrowedCount] = books[i].id;
+                    currentUser.borrowedCount++;
+                    books[i].borrowedCopies++;
+                    Console.WriteLine($"Du har lånat {books[i].title}. Välkommen åter!");
+                    return; // exit!
                 }
             }
             // In case the user enters an integer but it does not match any book-id on the array.
             Console.WriteLine("Bok-ID hittades inte.");
+        }
+
+        static void ReturnBook(Book[] books, User currentUser)
+        {
+            // Show user's borrowed books. Simple, currentUser and the method
+            currentUser.DisplayBorrowedBooks();
+
+            // Check if user has any books, if not, exit
+            if (currentUser.borrowedCount == 0)
+            {
+                return;
+            }
+
+            // But if the user has books, the user needs to choose which of own borrowed books to return (if > 1)
+            Console.WriteLine("\nAnge position för att lämna tillbaka (1-" + currentUser.borrowedCount + "): ");
+            // Saving temporarily user's input as a string. Need to convert to an integer. And check it!
+            string bookToReturn = Console.ReadLine();
+
+            // Check if user types an integer
+            if(!int.TryParse(bookToReturn, out int position))
+            {
+                Console.WriteLine("Ogilitgt position.");
+                return;
+            }
+
+            // Error handling if user gives a wrong input (<0 or >borrowedCount)
+            if (position < 1 || position > currentUser.borrowedCount)
+            {
+                Console.WriteLine("Ogiltig position.");
+                return;
+            }
+            
+            // Return the book ID from user's array, array's index starts at 0, use -1
+            int bookIdToReturn = currentUser.borrowedBooks[position - 1];
+            
+            // Time to find this bookToReturn's ID in the library, to add it in available
+            string bookToReturnTitle = ""; // I want to display a dynamic message to the user with the book title
+            for (int i = 0; i < books.Length; i++)
+            {
+                if (books[i].id == bookIdToReturn) 
+                {
+                    // The opposite of what we do when we borrow: i--
+                    // Here we decrease the number of copies borrowed for the borrowed book id/index
+                    bookToReturnTitle = books[i].title; // saving the title for dynamic communication
+                    books[i].borrowedCopies--;
+                    break; // exit!
+                }
+            }
+            
+            // Remove from user's borrowed list shifting all the items one position ahead/left
+            for (int j = position -1; j < currentUser.borrowedCount - 1; j++)
+            {
+                currentUser.borrowedBooks[j] = currentUser.borrowedBooks[j+1];
+            }
+            currentUser.borrowedCount--;
+            
+            // Step 7: Confirm to user
+            Console.WriteLine($"Du har returnerat {bookToReturnTitle}. Tack ska du ha!");
+
         }
     }    
 }
