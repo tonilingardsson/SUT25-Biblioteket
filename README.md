@@ -146,6 +146,31 @@ borrowedCount = 2            ← Endast 2 böcker aktiva
 
 ---
 
+## Reflektion och Lärdomar
+
+### Vad jag lärt mig
+Under detta projekt har jag utvecklat förståelse för:
+
+- **Objektorienterad design:** Vikten av att separera ansvar mellan klasser för bättre kodstruktur
+- **Array-hantering:** Hur man manipulerar arrays, särskilt utmaningen med att ta bort element mitt i en array
+- **Input-validering:** Att alltid validera användarinput med `TryParse()` för att undvika krascher
+- **Felsökning:** Att läsa och förstå felmeddelanden från kompilatorn
+- **Iteration och loopar:** Skillnaden mellan att loopa genom data vs direkt array-access
+
+### Utmaningar
+Den största utmaningen var att förstå när man behöver loopar och när man kan använda direkt access. Till exempel:
+- För att hitta en användare: behöver loop (måste söka)
+- För att få bok-ID från position: direkt access (vet exakt index)
+
+### Nästa steg
+Om jag skulle fortsätta utveckla detta system skulle jag:
+- Implementera filhantering för att spara lån mellan körningar
+- Lägga till mer bokdata (författare, ISBN)
+- Skapa en admin-funktion för att lägga till böcker dynamiskt
+- Migrera från arrays till `List<T>` för bättre flexibilitet
+
+---
+
 ## Teknisk Information
 - **Språk:** C# (.NET 8.0)
 - **Utvecklingsmiljö:** VS Code
