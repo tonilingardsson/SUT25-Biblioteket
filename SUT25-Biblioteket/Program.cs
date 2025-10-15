@@ -6,141 +6,50 @@ namespace LibrarySystem
     {
         static void Main(string[] args)
         {
-            // Creating one book
-            Book book1 = new Book();
-            book1.id = 1;
-            book1.title = "Harry Potter";
-            book1.totalCopies = 3;
-            book1.borrowedCopies = 0;
+            // Creating Books 2D array: [id, totalCopies, borrowedCopies]
+            int[,] books = {
+                {1,1,0}, // Harry Potter
+                {2,2,0}, // Batman
+                {3,3,0}, // Superman
+                {4,2,0}, // Bamse
+                {5,1,0}  // El quijote
+                };
 
-            // Creating second book
-            Book book2 = new Book();
-            book2.id = 2;
-            book2.title = "Batman";
-            book2.totalCopies = 8;
-            book2.borrowedCopies = 0;
+            // Inserting titles
+            string[] bookTitles = {
+                "Harry Potter",
+                "Batman",
+                "Superman",
+                "Bamse",
+                "El Quijote"
+            };
 
-            // Creating third book
-            Book book3 = new Book();
-            book3.id = 3;
-            book3.title = "Superman";
-            book3.totalCopies = 3;
-            book3.borrowedCopies = 0;
-            
-            // Creating fourth book
-            Book book4 = new Book();
-            book4.id = 4;
-            book4.title = "Bamse";
-            book4.totalCopies = 8;
-            book4.borrowedCopies = 0;
+            // 2D Array for users
+            int[,] users = {
+                {0,0,0,0}, // Petter
+                {0,0,0,0}, // Reidar
+                {0,0,0,0}, // Sara
+                {0,0,0,0}, // Pär
+                {0,0,0,0}, // Antonio
+            };
 
-            // Creating fifth book
-            Book book5 = new Book();
-            book5.id = 5;
-            book5.title = "El Quijote";
-            book5.totalCopies = 3;
-            book5.borrowedCopies = 0;
+            // Inserting names as a string into users
+            string[] usernames = {"Petter", "Reidar", "Sara", "Pär", "Antonio"};
+            // Inserting pins as string (Console.Read() takes strings!) into users
+            string[] pins = {"1111", "2222", "3333", "4444", "5555"};
 
-            // Predifined users
-            // Creating first user
-            User user1 = new User();
-            user1.username = "Petter";
-            user1.pin = "1111";
-            user1.InitialiseBorrowedBooks();
+            // Login
+            int currentUserIndex = LoginUser(usernames, pins);
 
-            // Creating second user
-            User user2 = new User();
-            user2.username = "Reidar";
-            user2.pin = "2222";
-            user2.InitialiseBorrowedBooks();
-
-            // Creating third user
-            User user3 = new User();
-            user3.username = "Sara";
-            user3.pin = "3333";
-            user3.InitialiseBorrowedBooks();
-
-            // Creating fourth user
-            User user4 = new User();
-            user4.username = "Pär";
-            user4.pin = "4444";
-            user4.InitialiseBorrowedBooks();
-
-            // Creating fifth user
-            User user5 = new User();
-            user5.username = "Antonio";
-            user5.pin = "5555";
-            user5.InitialiseBorrowedBooks();
-
-            // Save the users into an array, simple database
-            User[] users = new User[5];
-            users[0] = user1;
-            users[1] = user2;
-            users[2] = user3;
-            users[3] = user4;
-            users[4] = user5;
-
-            // Save the books into an array, simple database
-            Book[] books = new Book[5];
-            books[0] = book1;
-            books[1] = book2;
-            books[2] = book3;
-            books[3] = book4;
-            books[4] = book5;
-            
-            // Login system requires variables to make it work
-            int loginAttempts = 0;
-            bool loggedIn = false;
-            User currentUser = user1; // Need this to store the logged-in user after success
-
-            // Welcome message before login
-            Console.WriteLine("Välkommen till bibliotekets lånesystem!\n");
-
-
-            // Login loop with assigned attempts
-            while (!loggedIn && loginAttempts < 3)
+            // error handling if the user does not type the right pin
+            if (currentUserIndex == -1)
             {
-
-                // Ask username            
-                Console.WriteLine("Ange användarnamn: ");
-                string inputUsername = Console.ReadLine();
-                
-                // Ask the pin
-                Console.WriteLine("Ange PIN-kod: ");
-                string inputPin = Console.ReadLine();
-
-                // Here the loop to go through all users
-                for (int i = 0; i < users.Length; i++)
-                // Check if the inputUsername and inputPin match any user
-                {
-                    // If match found: 1. set currentUser to the user
-                // 2. Set loggeIn to true & 3. Break out of the loop
-                    if(users[i].username == inputUsername && users[i].pin == inputPin){
-                        currentUser = users[i];
-                        loggedIn = true;
-                        break;
-                    }
-                }
-
-                if (!loggedIn) 
-                {
-                    // If no match found after checking all users, do this:
-                    loginAttempts++;
-                    if (loginAttempts < 3) 
-                    {
-                        Console.WriteLine("Fel användarnamn eller PIN. Försök igen.");
-                    }
-                }
+                System.Console.WriteLine("Fel PIN! Försök igen.");
+                return; // Failed login
             }
-            // After a while... xD , checked if logged in
-                if(!loggedIn)
-                {
-                    Console.WriteLine("För många misslyckade försök. Hej då!");
-                    return;
-                }
 
             // Welcome message after login success
-            Console.WriteLine($"\nVälkommen, {currentUser.username}!");
+            Console.WriteLine($"\nVälkommen, {usernames[currentUserIndex]}!");
             bool userLoggedIn = true;
 
             // Building the Main menu
@@ -160,19 +69,19 @@ namespace LibrarySystem
                 {
                     // Display the books available in the library. Start with 5, add later
                     case "1":
-                    ShowBooks(books);
+                    ShowBooks(books, bookTitles);
                     break;
                     // Let the user borrow a book
                     case "2":
-                    BorrowBook(books, currentUser);
+                    BorrowBook(books, bookTitles, users, currentUserIndex);
                     break;
                     // Let the user return a book
                     case "3":
-                    ReturnBook(books, currentUser);
+                    ReturnBook(books, bookTitles, users, currentUserIndex);
                     break;
                     // Display all the borrowed books, method is done
                     case "4":
-                    currentUser.DisplayBorrowedBooks();
+                    DisplayUserBorrowedBooks(users, currentUserIndex, usernames);;
                     break;
                     // Log out, and communicate to the user
                     case "5":
@@ -195,23 +104,66 @@ namespace LibrarySystem
             // Thank the user for using the system
             Console.WriteLine("Tack för besöket! Hej då!");
         }
+
+        // Login method. It will return user index or -1 if the inputs are wrong
+        static int LoginUser(string[] usernames, string[] pins)
+        {
+            Console.WriteLine("Välkomen till bibliotekets lånesystem!\n");
+
+            int loginAttempts = 0; // Setting the initial attempts counter to zero
+
+            while (loginAttempts < 3)
+            {
+                Console.WriteLine("Ange användarnamn: ");
+                string inputUsername = Console.ReadLine();
+
+                Console.WriteLine("Ange PIN-kod: ");
+                string inputPin = Console.ReadLine();
+
+                // Loop though all users
+                for (int i = 0; i < usernames.Length; i++)
+                {
+                    if(usernames[i] == inputUsername && pins[i] == inputPin)
+                    {
+                        // Console.WriteLine($"\nVälkommen, {currentUser.username}!");
+                        return i; // return user index
+                    }
+                }
+
+                loginAttempts++;
+                if (loginAttempts < 3)
+                {
+                    Console.WriteLine("Fel användarnamn eller PIN. Försök igen.\n");
+                }
+            }
+            // When the user has tried three times and failed, exit the application.
+            Console.WriteLine("För många misslyckade försök. Hej då!");
+            return -1;
+        }
+
         // This method will display the books when user chooses 1 on the menu
-        static void ShowBooks(Book[] books)
+        static void ShowBooks(int[,] books, string[] bookTitles)
         {
             // Display a menu "header"
             Console.WriteLine("\n=== Tillgängliga böcker ===");
 
             // Loop though all the books saved above
-            foreach (var book in books)
+            for (int i = 0; i < books.GetLength(0); i++)
             {
-                // Using the method created in Book.cs -> applying SOC
-                book.DisplayBook();
+                // For every book in the library do:
+                int id = books[i, 0]; // id saved in 2D array [X, 0]
+                int totalCopies = books[i,1]; // # of totalCopies saved in 2D [X,1]
+                int borrowedCopies = books[i,2]; // # of borrowedCopies saved in 2D [X,2]
+                int available = totalCopies - borrowedCopies;
+
+                System.Console.WriteLine($"[{id}] {bookTitles[i]} - Tillgängliga: {available} av {totalCopies}");
             }
         }
+
         // This method will display the available books when user chooses 2 on the menu
-        static void BorrowBook(Book[] books, User currentUser)
+        static void BorrowBook(int [,] books, string[] bookTitles, int[,] users, int userIndex)
         {
-            ShowBooks(books);
+            ShowBooks(books, bookTitles);
 
             // Asking the user to know which book wants to borrow. Saving a string!
             Console.WriteLine("\nAnge bok-ID för att låna: ");
@@ -224,96 +176,142 @@ namespace LibrarySystem
                 return;
             }
 
-            // ID is int, then we search the bok-ID through the array
-            for (int i = 0; i < books.Length; i++)
+            // Find the bok-ID through the array
+            int bookIndex = -1; // WHY THIS?
+            for (int i = 0; i < books.GetLength(0); i++)
             {
-                if (books[i].id == bookId) 
+                if (books[i,0] == bookId) 
                 {
-                    // Check if the user can still borrow mroe books
-
-                    if (!currentUser.CanBorrowMore())
-                    {
-                        Console.WriteLine("Du har redan lånat max antal böcker (3).");
-                        return;
-                    }
-                    
-                    // Check if there are available copies of the chosen book    
-                    if(books[i].GetAvailableCopies() == 0)
-                    {
-                        Console.WriteLine("Boken är inte tillgänglig just nu.");
-                        return;
-                    }
-
-                    // When user can borrow & there are available copies do this:
-                    // Add book to the user & display how many available copies are left
-                    currentUser.borrowedBooks[currentUser.borrowedCount] = books[i].id;
-                    currentUser.borrowedCount++;
-                    books[i].borrowedCopies++;
-                    Console.WriteLine($"Du har lånat {books[i].title}. Välkommen åter!");
-                    return; // exit!
+                    bookIndex = i;
+                    break;
                 }
             }
-            // In case the user enters an integer but it does not match any book-id on the array.
-            Console.WriteLine("Bok-ID hittades inte.");
-        }
 
-        static void ReturnBook(Book[] books, User currentUser)
-        {
-            // Show user's borrowed books. Simple, currentUser and the method
-            currentUser.DisplayBorrowedBooks();
-
-            // Check if user has any books, if not, exit
-            if (currentUser.borrowedCount == 0)
+            // Error handling for wrong bookId
+            if (bookIndex == -1)
             {
+                System.Console.WriteLine("Bok-ID hittades inte.");
                 return;
             }
 
+            // Check if the user can still borrow more books
+            int borrowedCount = users[userIndex, 0];
+            if (borrowedCount >= 3)
+            {
+                Console.WriteLine("Du har redan lånat max antal böcker (3).");
+                return;
+            }
+                    
+            // Check if there are available copies of the chosen book
+            int totalCopies = books[bookIndex, 1];
+            int borrowedCopies = books[bookIndex, 2];
+            int available = totalCopies - borrowedCopies;
+
+            if(available == 0)
+            {
+                Console.WriteLine("Boken är inte tillgänglig just nu.");
+                return;
+            }
+
+            // When user can borrow & there are available copies do this:
+            // Add book to the user & display how many available copies are left
+            users[userIndex, borrowedCount + 1] = bookId;
+            users[userIndex, 0]++; // Increase borrowed count for user
+            books[bookIndex, 2]++; // Increased borrowed count for book
+
+            Console.WriteLine($"Du har lånat {bookTitles[bookIndex]}. Välkommen åter!");
+        }
+
+        // Return a book
+        static void ReturnBook(int[,] books, string[] bookTitles, int[,] users, int userIndex)
+        {
+            // Show user's borrowed books. Simple, currentUser and the method
+            DisplayUserBorrowedBooks(users, userIndex, null);
+
+            int borrowedCount = users[userIndex, 0];
+
+            // Check if user has any books, if not, exit
+            if (borrowedCount == 0)
+            {
+                return; // No books to return
+            }
+
             // But if the user has books, the user needs to choose which of own borrowed books to return (if > 1)
-            Console.WriteLine("\nAnge position för att lämna tillbaka (1-" + currentUser.borrowedCount + "): ");
+            Console.Write("\nAnge bok position för att lämna tillbaka (1-" + borrowedCount + "): ");
             // Saving temporarily user's input as a string. Need to convert to an integer. And check it!
             string bookToReturn = Console.ReadLine();
 
-            // Check if user types an integer
-            if(!int.TryParse(bookToReturn, out int position))
+            // Check if user types an integer, validate
+            if(!int.TryParse(bookToReturn, out int bookPosition))
             {
-                Console.WriteLine("Ogilitgt position.");
+                Console.WriteLine("Ogilitgt bok position.");
                 return;
             }
 
             // Error handling if user gives a wrong input (<0 or >borrowedCount)
-            if (position < 1 || position > currentUser.borrowedCount)
+            if (bookPosition < 1 || bookPosition > borrowedCount)
             {
                 Console.WriteLine("Ogiltig position.");
                 return;
             }
             
-            // Return the book ID from user's array, array's index starts at 0, use -1
-            int bookIdToReturn = currentUser.borrowedBooks[position - 1];
+            // Return the book ID 
+            int bookIdToReturn = users[userIndex, bookPosition];
             
             // Time to find this bookToReturn's ID in the library, to add it in available
-            string bookToReturnTitle = ""; // I want to display a dynamic message to the user with the book title
-            for (int i = 0; i < books.Length; i++)
+            int bookIndex = -1;
+            for (int i = 0; i < books.GetLength(0); i++)
             {
-                if (books[i].id == bookIdToReturn) 
+                if (books[i,0] == bookIdToReturn) 
                 {
                     // The opposite of what we do when we borrow: i--
                     // Here we decrease the number of copies borrowed for the borrowed book id/index
-                    bookToReturnTitle = books[i].title; // saving the title for dynamic communication
-                    books[i].borrowedCopies--;
+                    bookIndex = i; // saving the title for dynamic communication
                     break; // exit!
                 }
             }
+
+            string bookTitle = bookTitles[bookIndex];
+
+            // Decrease borrowed copies in the library
+            books[bookIndex, 2]--;
             
             // Remove from user's borrowed list shifting all the items one position ahead/left
-            for (int j = position -1; j < currentUser.borrowedCount - 1; j++)
+            for (int j = bookPosition; j < borrowedCount; j++)
             {
-                currentUser.borrowedBooks[j] = currentUser.borrowedBooks[j+1];
+                users[userIndex, j] = users[userIndex, j + 1];
             }
-            currentUser.borrowedCount--;
+            // Decrease user's borrowed books count
+            users[userIndex, 0]--;
             
             // Step 7: Confirm to user
-            Console.WriteLine($"Du har returnerat {bookToReturnTitle}. Tack ska du ha!");
+            Console.WriteLine($"Du har returnerat {bookTitle}. Tack ska du ha!");
+        }
 
+        // Display user's borrowed books
+        static void DisplayUserBorrowedBooks(int[,] users, int userIndex, string[] usernames)
+        {
+            if (usernames != null)
+            {
+                System.Console.WriteLine($"\n{usernames[userIndex]}s lånade böcker:");
+            }
+            else
+            {
+                System.Console.WriteLine("\nDina lånade böcker");
+            }
+
+            int borrowedCount = users[userIndex, 0];
+
+            if (borrowedCount == 0) 
+            {
+                System.Console.WriteLine("Du har inga lånade böcker.");
+                return;
+            }
+
+            for (int i = 1; i <= borrowedCount; i++)
+            {
+                System.Console.WriteLine($"- Bok ID: {users[userIndex, i]}");
+            }
         }
     }    
 }
