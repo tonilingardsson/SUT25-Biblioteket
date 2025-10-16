@@ -44,7 +44,6 @@ namespace LibrarySystem
             // error handling if the user does not type the right pin
             if (currentUserIndex == -1)
             {
-                System.Console.WriteLine("Fel PIN! Försök igen.");
                 return; // Failed login
             }
 
@@ -81,11 +80,11 @@ namespace LibrarySystem
                     break;
                     // Display all the borrowed books, method is done
                     case "4":
-                    DisplayUserBorrowedBooks(users, currentUserIndex, usernames);;
+                    DisplayUserBorrowedBooks(users, currentUserIndex, usernames, books, bookTitles);;
                     break;
                     // Log out, and communicate to the user
                     case "5":
-                    Console.WriteLine("Tack för att du läser! Loggar ut...");
+                    Console.WriteLine("Loggar ut...");
                     userLoggedIn = false;
                     break;
                     default:
@@ -226,7 +225,7 @@ namespace LibrarySystem
         static void ReturnBook(int[,] books, string[] bookTitles, int[,] users, int userIndex)
         {
             // Show user's borrowed books. Simple, currentUser and the method
-            DisplayUserBorrowedBooks(users, userIndex, null);
+            DisplayUserBorrowedBooks(users, userIndex, null, books, bookTitles);
 
             int borrowedCount = users[userIndex, 0];
 
@@ -238,6 +237,7 @@ namespace LibrarySystem
 
             // But if the user has books, the user needs to choose which of own borrowed books to return (if > 1)
             Console.Write("\nAnge bok position för att lämna tillbaka (1-" + borrowedCount + "): ");
+            
             // Saving temporarily user's input as a string. Need to convert to an integer. And check it!
             string bookToReturn = Console.ReadLine();
 
@@ -289,8 +289,9 @@ namespace LibrarySystem
         }
 
         // Display user's borrowed books
-        static void DisplayUserBorrowedBooks(int[,] users, int userIndex, string[] usernames)
+        static void DisplayUserBorrowedBooks(int[,] users, int userIndex, string[] usernames, int[,] books, string[] bookTitles)
         {
+            // If we found a user, do... CW: user borrowed books
             if (usernames != null)
             {
                 System.Console.WriteLine($"\n{usernames[userIndex]}s lånade böcker:");
@@ -300,8 +301,10 @@ namespace LibrarySystem
                 System.Console.WriteLine("\nDina lånade böcker");
             }
 
+            // Saved the data into a variable
             int borrowedCount = users[userIndex, 0];
 
+            // If the counter for borrowed is zero, display msg "no books"
             if (borrowedCount == 0) 
             {
                 System.Console.WriteLine("Du har inga lånade böcker.");
@@ -310,9 +313,23 @@ namespace LibrarySystem
 
             for (int i = 1; i <= borrowedCount; i++)
             {
-                System.Console.WriteLine($"- Bok ID: {users[userIndex, i]}");
+                // Save the bookId
+                int bookIdToReturn = users[userIndex, i]; // save the book ID
+                
+                // Find the book title
+                string bookTitle = ""; // Declare var and assing to "" to avoit nullable
+                for (int j = 0; j < books.GetLength(0); j++)
+                {
+                    if (books[j,0] == bookIdToReturn) 
+                    {
+                        // If bookId is found, save its Title
+                        bookTitle = bookTitles[j];
+                        break; // exit!
+                    }
+                }
+            
+                System.Console.WriteLine($"- Bok position: {i} | Titel: {bookTitle} | ID: {bookIdToReturn}");
             }
         }
     }    
 }
-
