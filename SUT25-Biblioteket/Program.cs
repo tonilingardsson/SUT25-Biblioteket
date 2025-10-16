@@ -176,7 +176,7 @@ namespace LibrarySystem
             }
 
             // Find the bok-ID through the array
-            int bookIndex = -1; // WHY THIS?
+            int bookIndex = -1; // This sets initial value to "not found", <0
             for (int i = 0; i < books.GetLength(0); i++)
             {
                 if (books[i,0] == bookId) 
